@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Install nginx") {
+            steps {
+                echo "Starting the instalation"
+                sh "sudo apt update"
+                sh "sudo apt install nginx -y"
+                sh "sudo systemctl enable nginx"
+                sh "sudo systemctl status nginx"
+            }
+        }
+        stage("Check nginx logs") {
+            steps {
+                sh "sudo nginx -t"
+            }
+        }    
+        stage("Check connectivity") {
+            steps {
+                sh "sudo curl -I http://localhost:80"
+            }
+        }
+    }
+
+    post { 
+        always { 
+            echo 'Finished'
+        }
+    }
+}
