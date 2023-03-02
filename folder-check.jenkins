@@ -1,0 +1,33 @@
+pipeline{
+    agent any
+
+    parameters {
+        choice(name: "Directory", choices: ["Desktop", "Downloads"], description: "Select the directory you want to check")
+    }
+
+    stages{
+        stage("Define Directory"){
+            steps{
+                echo "The select directory is ${params.Directory}" 
+                sh "cd /home/user/${params.Directory}"  
+            }
+        }
+        stage("Initiate check"){
+            steps{
+                sh "sudo du -sh"
+            }
+        }    
+    }
+
+    post{
+        always{
+            echo "The pipeline finished"
+        }
+        success{
+            echo "Executed successfully"
+        }
+        failure{
+            echo "Execution failed"
+        }
+    }
+}
